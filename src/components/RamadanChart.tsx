@@ -64,10 +64,10 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
   }
 
   return (
-    <div className="w-full overflow-x-auto border rounded-xl shadow-sm bg-white dark:bg-gray-900 border-gray-200 dark:border-gray-800">
+    <div className="w-full overflow-x-auto border rounded-xl shadow-sm bg-white border-gray-200">
       <div className="inline-block min-w-full align-middle">
         <div className="overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+          <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-purple-600 text-white">
               <tr>
                 <th
@@ -87,10 +87,10 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 dark:divide-gray-800 bg-white dark:bg-gray-950">
+            <tbody className="divide-y divide-gray-200 bg-white">
               {ACTIVITIES.map((activity, idx) => (
-                <tr key={activity} className={idx % 2 === 0 ? "bg-gray-50 dark:bg-gray-900/50" : ""}>
-                  <td className="sticky left-0 z-10 py-3 pl-4 pr-3 text-sm font-medium text-gray-900 dark:text-gray-100 bg-inherit sm:pl-6 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                <tr key={activity} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
+                  <td className="sticky left-0 z-10 py-3 pl-4 pr-3 text-sm font-medium text-gray-900 bg-inherit sm:pl-6 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                     {activity}
                   </td>
                   {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {

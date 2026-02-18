@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen flex flex-col font-hind-siliguri">
-       <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur">
+      <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
@@ -27,7 +27,7 @@ export default async function Home() {
                     await signOut()
                   }}
                 >
-                  <button type="submit" className="text-sm font-medium hover:underline text-gray-600 dark:text-gray-400">
+                  <button type="submit" className="text-sm font-medium hover:underline text-gray-600">
                     Sign Out
                   </button>
                 </form>
@@ -50,7 +50,7 @@ export default async function Home() {
                         await signIn("credentials")
                       }}
                     >
-                      <button type="submit" className="text-sm font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                      <button type="submit" className="text-sm font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors">
                         Guest Access
                       </button>
                     </form>
@@ -66,7 +66,7 @@ export default async function Home() {
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                      <div>
                         <h2 className="text-2xl font-bold">Daily Progress</h2>
-                        <p className="text-gray-500 dark:text-gray-400">Track your daily acts of worship.</p>
+                        <p className="text-gray-500">Track your daily acts of worship.</p>
                      </div>
                 </div>
                 <RamadanChart initialLogs={logs} />

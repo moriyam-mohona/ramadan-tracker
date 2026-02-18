@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${hindSiliguri.variable} bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased`}>
+      <body className={`${inter.className} ${hindSiliguri.variable} bg-gray-50 text-gray-900 antialiased`}>
         {children}
       </body>
     </html>
