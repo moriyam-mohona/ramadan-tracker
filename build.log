@@ -1,0 +1,27 @@
+
+> ramadan-diary@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Environments: .env
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 3.6s
+  Running TypeScript ...
+Failed to compile.
+
+./src/app/page.tsx:72:31
+Type error: Type '{ id: string; userId: string; day: number; activities: JsonValue; updatedAt: Date; }[]' is not assignable to type 'DayLog[]'.
+  Type '{ id: string; userId: string; day: number; activities: JsonValue; updatedAt: Date; }' is not assignable to type 'DayLog'.
+    Types of property 'activities' are incompatible.
+      Type 'JsonValue' is not assignable to type 'Record<string, boolean>'.
+        Type 'null' is not assignable to type 'Record<string, boolean>'.
+
+[0m [90m 70 |[39m                      [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 71 |[39m                 [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+[31m[1m>[22m[39m[90m 72 |[39m                 [33m<[39m[33mRamadanChart[39m initialLogs[33m=[39m{logs} [33m/[39m[33m>[39m
+ [90m    |[39m                               [31m[1m^[22m[39m
+ [90m 73 |[39m            [33m<[39m[33m/[39m[33mdiv[39m[33m>[39m
+ [90m 74 |[39m         ) [33m:[39m (
+ [90m 75 |[39m           [33m<[39m[33mdiv[39m className[33m=[39m[32m"flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6"[39m[33m>[39m[0m
+Next.js build worker exited with code: 1 and signal: null
