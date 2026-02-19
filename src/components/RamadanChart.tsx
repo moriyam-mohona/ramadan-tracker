@@ -64,57 +64,80 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
     try {
         const result = await toggleActivity(day, activity, newStatus)
         if (result.success) {
-            toast.success("Saved securely to database")
+            toast.success("Saved", { duration: 1000, className: "bg-emerald-50 text-emerald-800 border-emerald-200" })
         } else {
             toast.error("Failed to save")
-            // Revert optimistic update if needed, though handling valid rollback is complex with just optimistic UI
-            // For now, simpler to just notify error.
         }
     } catch (error) {
-        toast.error("Network error, failed to save")
+        toast.error("Network error")
     }
   }
 
   return (
-    <div className="w-full overflow-x-auto border rounded-xl shadow-sm bg-white border-gray-200">
+    <div className="w-full overflow-x-auto border rounded-2xl shadow-lg bg-white border-emerald-100/50">
       <div className="inline-block min-w-full align-middle">
-        <div className="overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-purple-600 text-white">
+        <div className="overflow-hidden rounded-2xl">
+          <table className="min-w-full divide-y divide-emerald-100">
+            <thead className="bg-emerald-800 text-white">
               <tr>
                 <th
                   scope="col"
-                   className="sticky left-0 z-20 py-3 pl-4 pr-3 text-left text-sm font-semibold  bg-purple-700 sm:pl-6 min-w-[200px]"
+                  className="sticky left-0 z-20 py-4 pl-6 pr-3 text-left text-sm font-bold bg-emerald-900 sm:pl-8 min-w-[220px] shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)] border-r border-emerald-700"
                 >
-                  চ্যালেঞ্জ সমূহ
+                  <span className="flex items-center gap-2">
+                    <span className="text-amber-400">❖</span> চ্যালেঞ্জ সমূহ
+                  </span>
                 </th>
                 {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => (
                   <th
                     key={day}
                     scope="col"
-                    className="px-2 py-3 text-center text-sm font-semibold  min-w-[40px]"
+                    className="px-2 py-4 text-center text-sm font-semibold min-w-[45px] border-l border-emerald-700/30"
                   >
-                    {day.toLocaleString("bn-BD")}
+                    <div className="flex flex-col items-center">
+                        <span className="text-xs opacity-70 font-normal">Day</span>
+                        <span>{day.toLocaleString("bn-BD")}</span>
+                    </div>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200 bg-white">
+            <tbody className="divide-y divide-emerald-100 bg-white">
               {ACTIVITIES.map((activity, idx) => (
-                <tr key={activity} className={idx % 2 === 0 ? "bg-gray-50" : ""}>
-                  <td className="sticky left-0 z-10 py-3 pl-4 pr-3 text-sm font-medium text-gray-900 bg-inherit sm:pl-6 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                <tr key={activity} className={idx % 2 === 0 ? "bg-emerald-50/30" : "bg-white hover:bg-emerald-50/10 transition-colors"}>
+                  <td className="sticky left-0 z-10 py-3 pl-6 pr-3 text-sm font-medium text-emerald-900 bg-inherit sm:pl-8 whitespace-nowrap shadow-[2px_0_5px_-2px_rgba(0,0,0,0.05)] border-r border-emerald-100">
                     {activity}
                   </td>
                   {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
                     const status = optimisticLogs.get(day)?.[activity] ?? false
                     return (
-                      <td key={`${day}-${activity}`} className="px-2 py-3 text-center">
-                        <input
-                          type="checkbox"
-                          checked={status}
-                          onChange={() => handleToggle(day, activity, status)}
-                          className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-600 cursor-pointer transition-transform active:scale-95"
-                        />
+                      <td key={`${day}-${activity}`} className="px-2 py-3 text-center border-l border-emerald-50">
+                        <label className="relative flex items-center justify-center cursor-pointer group">
+                            <input
+                            type="checkbox"
+                            checked={status}
+                            onChange={() => handleToggle(day, activity, status)}
+                            className="peer sr-only" 
+                            />
+                            <div className={`w-6 h-6 rounded-md border-2 transition-all duration-200 
+                                ${status 
+                                    ? "bg-emerald-600 border-emerald-600 scale-100" 
+                                    : "border-gray-300 bg-white group-hover:border-emerald-300"
+                                }`}
+                            >
+                                <svg 
+                                    className={`w-full h-full text-white transition-transform duration-200 ${status ? "scale-100" : "scale-0"}`} 
+                                    viewBox="0 0 24 24" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    strokeWidth="3" 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round"
+                                >
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                            </div>
+                        </label>
                       </td>
                     )
                   })}

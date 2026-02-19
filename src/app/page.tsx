@@ -8,17 +8,17 @@ export default async function Home() {
 
   return (
     <div className="min-h-screen flex flex-col font-hind-siliguri">
-      <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/80 backdrop-blur">
+      <header className="sticky top-0 z-50 w-full border-b border-emerald-100 bg-white/90 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
-              Ramadan Planner
+            <h1 className="text-xl font-bold text-emerald-800 flex items-center gap-2">
+              <span className="text-2xl text-amber-500">☪</span> Ramadan Planner
             </h1>
           </div>
           <div className="flex items-center gap-4">
             {session ? (
               <div className="flex items-center gap-4">
-                <span className="text-sm font-medium hidden sm:inline-block">
+                <span className="text-sm font-medium hidden sm:inline-block text-emerald-900">
                   {session.user?.name}
                 </span>
                  <form
@@ -27,23 +27,23 @@ export default async function Home() {
                     await signOut()
                   }}
                 >
-                  <button type="submit" className="text-sm font-medium hover:underline text-gray-600">
+                  <button type="submit" className="text-sm font-medium hover:underline text-emerald-700 hover:text-emerald-900 transition-colors">
                     Sign Out
                   </button>
                 </form>
               </div>
             ) : (
                 <div className="flex gap-2">
-                     {/* <form
+                     <form
                       action={async () => {
                         "use server"
                         await signIn("google")
                       }}
                     >
-                      <button type="submit" className="text-sm font-medium px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors">
-                        Sign In with Google
+                      <button type="submit" className="text-sm font-medium px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors shadow-sm">
+                        Sign In
                       </button>
-                    </form> */}
+                    </form>
 
                     <form
                         action={async (formData) => {
@@ -57,10 +57,10 @@ export default async function Home() {
                             name="username" 
                             placeholder="Username" 
                             required
-                            className="px-2 py-2 border rounded-md text-sm w-32 focus:outline-none focus:ring-1 focus:ring-purple-500"
+                            className="px-3 py-2 border border-emerald-200 rounded-md text-sm w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/50"
                         />
-                        <button type="submit" className="text-sm font-medium px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors">
-                            Guest Login
+                        <button type="submit" className="text-sm font-medium px-4 py-2 border border-emerald-200 text-emerald-700 rounded-md hover:bg-emerald-50 transition-colors">
+                            Guest
                         </button>
                     </form>
                 </div>
@@ -72,39 +72,46 @@ export default async function Home() {
       <main className="flex-1 container mx-auto px-4 py-8">
         {session ? (
            <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-100 pb-4">
                      <div>
-                        <h2 className="text-2xl font-bold">Daily Progress</h2>
-                        <p className="text-gray-500">Track your daily acts of worship.</p>
+                        <h2 className="text-2xl font-bold text-emerald-900">Daily Progress</h2>
+                        <p className="text-emerald-600/80">Track your daily acts of worship.</p>
                      </div>
                 </div>
                 <RamadanChart initialLogs={logs} />
            </div>
         ) : (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-            <h2 className="text-4xl font-bold tracking-tight">Track your Ramadan Journey</h2>
-            <p className="text-xl text-gray-500 max-w-lg">
-              A simple, distraction-free planner to keep track of your daily prayers, Quran recitation, and good deeds.
-            </p>
-             <div className="flex flex-col gap-4 w-full max-w-sm">
+          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-8">
+            <div className="space-y-2">
+                <p className="text-3xl font-arabic text-emerald-800 opacity-90">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+                <h2 className="text-5xl font-bold tracking-tight text-emerald-900">
+                  Ramadan <span className="text-amber-500">Journey</span>
+                </h2>
+                <p className="text-xl text-emerald-700/80 max-w-lg mx-auto leading-relaxed">
+                  A simple, spiritual companion to track your prayers, Quran recitation, and daily good deeds.
+                </p>
+            </div>
+            
+             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-emerald-100/50 border border-emerald-50">
                  <form
                     action={async () => {
                         "use server"
                         await signIn("google")
                     }}
-                    className="w-full"
+                    className="w-full mb-6"
                 >
-                    <button type="submit" className="w-full px-8 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors shadow-lg hover:shadow-xl">
+                    <button type="submit" className="w-full px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-200/50 flex items-center justify-center gap-2">
+                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .587 5.387.587 12s5.28 12 11.893 12c3.48 0 6.147-1.133 8.213-3.293 2.08-2.16 2.72-5.467 2.72-8.227 0-.8-.08-1.56-.24-2.253h-10.693z"/></svg>
                         Sign In with Google
                     </button>
                 </form>
 
-                <div className="relative">
+                <div className="relative mb-6">
                     <div className="absolute inset-0 flex items-center">
-                        <span className="w-full border-t" />
+                        <span className="w-full border-t border-emerald-100" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-muted-foreground">Or continue as guest</span>
+                        <span className="bg-white px-2 text-emerald-500 font-medium">Or continue as guest</span>
                     </div>
                 </div>
 
@@ -113,21 +120,21 @@ export default async function Home() {
                         "use server"
                         await signIn("credentials", formData)
                     }}
-                    className="flex gap-2"
+                    className="flex flex-col gap-3"
                 >
                     <input 
                         type="text" 
                         name="username" 
                         placeholder="Choose a username..." 
                         required
-                        className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        className="w-full px-4 py-3 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/30 text-emerald-900 placeholder:text-emerald-400"
                     />
-                    <button type="submit" className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100 transition-colors whitespace-nowrap">
-                        Go
+                    <button type="submit" className="w-full px-4 py-3 border border-emerald-200 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors">
+                        Begin Journey
                     </button>
                 </form>
-                <p className="text-xs text-gray-400">
-                    Note: Anyone with this username can access this diary.
+                <p className="text-xs text-emerald-400/80 mt-4">
+                    Note: Your progress is saved under this username.
                 </p>
              </div>
           </div>
