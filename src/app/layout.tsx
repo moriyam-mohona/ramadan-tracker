@@ -11,8 +11,11 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "Ramadan Planner",
-  description: "Track your daily Ramadan activities",
+  title: "Ramadan Planner | Track Your Journey",
+  description: "A spiritual companion to track your daily prayers, Quran recitation, and good deeds during the blessed month of Ramadan.",
+  icons: {
+    icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>"
+  }
 };
 
 export default function RootLayout({
