@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Hind_Siliguri } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { JsonLd } from "@/components/JsonLd";
 
 const inter = Inter({ subsets: ["latin"] });
 const hindSiliguri = Hind_Siliguri({
@@ -26,6 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} ${hindSiliguri.variable} antialiased`}>
+        <JsonLd />
         {children}
         <Toaster position="top-right" />
       </body>
