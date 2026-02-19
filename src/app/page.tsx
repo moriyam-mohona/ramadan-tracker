@@ -3,6 +3,7 @@ import { getDayLogs } from "@/actions"
 import { RamadanChart } from "@/components/RamadanChart"
 import { PrayerTimes } from "@/components/PrayerTimes"
 import { NavbarCountdown } from "@/components/NavbarCountdown"
+import { InstallPrompt } from "@/components/InstallPrompt"
 
 export default async function Home() {
   const session = await auth()
@@ -16,6 +17,7 @@ export default async function Home() {
             <h1 className="text-xl font-bold text-emerald-800 flex items-center gap-2">
               <span className="text-2xl text-amber-500">☪</span> Ramadan Planner
             </h1>
+            <InstallPrompt />
           </div>
           
           {/* Center: Countdown (Visible on Desktop) */}

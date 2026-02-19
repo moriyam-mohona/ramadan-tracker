@@ -4,6 +4,7 @@ import { useState, useOptimistic, startTransition, useMemo, useEffect } from "re
 import { toggleActivity } from "@/actions"
 import { cn } from "@/lib/utils"
 import { toast } from "sonner"
+import { useOfflineSync } from "@/hooks/useOfflineSync"
 
 // Activities list
 const ACTIVITIES = [
@@ -50,6 +51,7 @@ type DayLog = {
 
 export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
   const [currentDay, setCurrentDay] = useState<number | null>(null)
+  const { isOnline, saveActionOffline } = useOfflineSync()
 
   // Determine current day of Ramadan (Approximate logic for 2026/1447)
   // Assuming Ramadan 2026 starts approx Feb 18. 
@@ -89,6 +91,12 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
       addOptimisticLog({ day, activity, status: newStatus })
     })
 
+    // Offline Handling
+    if (!isOnline) {
+        saveActionOffline(day, activity, newStatus)
+        return
+    }
+
     try {
         const result = await toggleActivity(day, activity, newStatus)
         if (result.success && newStatus) {
@@ -102,7 +110,10 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
             toast.error("Failed to save", { className: "bg-red-50 text-red-800" })
         }
     } catch (error) {
-        toast.error("Network error")
+        // Fallback to offline save if network error occurs even if isOnline was true
+        console.error("Network error, saving offline", error)
+        saveActionOffline(day, activity, newStatus)
+        toast.error("Network error. Saved offline.")
     }
   }
 
