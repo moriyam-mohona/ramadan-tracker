@@ -1,6 +1,8 @@
 import { auth, signIn, signOut } from "@/auth"
 import { getDayLogs } from "@/actions"
 import { RamadanChart } from "@/components/RamadanChart"
+import { PrayerTimes } from "@/components/PrayerTimes"
+import { NavbarCountdown } from "@/components/NavbarCountdown"
 
 export default async function Home() {
   const session = await auth()
@@ -15,6 +17,12 @@ export default async function Home() {
               <span className="text-2xl text-amber-500">☪</span> Ramadan Planner
             </h1>
           </div>
+          
+          {/* Center: Countdown (Visible on Desktop) */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <NavbarCountdown />
+          </div>
+
           <div className="flex items-center gap-4">
             {session ? (
               <div className="flex items-center gap-4">
@@ -57,7 +65,7 @@ export default async function Home() {
                             name="username" 
                             placeholder="Username" 
                             required
-                            className="px-3 py-2 border border-emerald-200 rounded-md text-sm w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/50"
+                            className="hidden md:block px-3 py-2 border border-emerald-200 rounded-md text-sm w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/50"
                         />
                         <button type="submit" className="text-sm font-medium px-4 py-2 border border-emerald-200 text-emerald-700 rounded-md hover:bg-emerald-50 transition-colors">
                             Guest
@@ -71,7 +79,12 @@ export default async function Home() {
 
       <main className="flex-1 container mx-auto px-4 py-8">
         {session ? (
-           <div className="space-y-6">
+           <div className="space-y-8">
+                {/* Prayer Times Section */}
+                <div className="w-full">
+                     <PrayerTimes />
+                </div>
+
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-emerald-100 pb-4">
                      <div>
                         <h2 className="text-2xl font-bold text-emerald-900">Daily Progress</h2>
@@ -81,18 +94,30 @@ export default async function Home() {
                 <RamadanChart initialLogs={logs} />
            </div>
         ) : (
-          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-8">
-            <div className="space-y-2">
+          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-12">
+            
+            {/* Hero Headers */}
+            <div className="space-y-4 max-w-2xl mx-auto">
                 <p className="text-3xl font-arabic text-emerald-800 opacity-90">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
-                <h2 className="text-5xl font-bold tracking-tight text-emerald-900">
+                <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-emerald-900">
                   Ramadan <span className="text-amber-500">Journey</span>
                 </h2>
-                <p className="text-xl text-emerald-700/80 max-w-lg mx-auto leading-relaxed">
-                  A simple, spiritual companion to track your prayers, Quran recitation, and daily good deeds.
+                <p className="text-xl text-emerald-700/80 leading-relaxed">
+                  A spiritual companion to track your prayers, Quran recitation, and daily good deeds.
                 </p>
             </div>
+
+            {/* Prayer Times for Guests */}
+            <div className="w-full max-w-4xl transform hover:scale-[1.01] transition-transform duration-500">
+                 <PrayerTimes />
+            </div>
             
-             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-emerald-100/50 border border-emerald-50">
+             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-emerald-100/50 border border-emerald-50 relative overflow-hidden">
+                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-amber-400"></div>
+                 <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center justify-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Start Your Journey
+                 </h3>
                  <form
                     action={async () => {
                         "use server"
@@ -111,7 +136,7 @@ export default async function Home() {
                         <span className="w-full border-t border-emerald-100" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-emerald-500 font-medium">Or continue as guest</span>
+                        <span className="bg-white px-2 text-emerald-500 font-medium tracking-wider">Or continue as guest</span>
                     </div>
                 </div>
 
@@ -129,13 +154,10 @@ export default async function Home() {
                         required
                         className="w-full px-4 py-3 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/30 text-emerald-900 placeholder:text-emerald-400"
                     />
-                    <button type="submit" className="w-full px-4 py-3 border border-emerald-200 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-50 transition-colors">
-                        Begin Journey
+                    <button type="submit" className="w-full px-4 py-3 border-2 border-emerald-100 text-emerald-700 font-bold rounded-lg hover:bg-emerald-50 hover:border-emerald-200 transition-all">
+                        Begin as Guest
                     </button>
                 </form>
-                <p className="text-xs text-emerald-400/80 mt-4">
-                    Note: Your progress is saved under this username.
-                </p>
              </div>
           </div>
         )}
