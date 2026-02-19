@@ -11,12 +11,14 @@ model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
   email         String?   @unique
+  username      String?   @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
   
-  dayLogs       DayLog[]
+
+  activityLogs  ActivityLog[]
   
   isGuest       Boolean   @default(false)
   createdAt     DateTime  @default(now())
@@ -56,14 +58,17 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-model DayLog {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId     String   @db.ObjectId
-  day        Int      // 1-30
-  activities Json     // Key-value pair of activity name -> boolean
-  updatedAt  DateTime @updatedAt
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, day])
+model ActivityLog {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  day         Int
+  activity    String
+  isCompleted Boolean  @default(false)
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, day, activity])
 }

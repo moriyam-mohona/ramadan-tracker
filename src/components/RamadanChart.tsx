@@ -3,6 +3,7 @@
 import { useState, useOptimistic, startTransition } from "react"
 import { toggleActivity } from "@/actions"
 import { cn } from "@/lib/utils"
+import { toast } from "sonner"
 
 // Activities list based on the provided image (translated/transcribed)
 const ACTIVITIES = [
@@ -60,7 +61,18 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
       addOptimisticLog({ day, activity, status: newStatus })
     })
 
-    await toggleActivity(day, activity, newStatus)
+    try {
+        const result = await toggleActivity(day, activity, newStatus)
+        if (result.success) {
+            toast.success("Saved securely to database")
+        } else {
+            toast.error("Failed to save")
+            // Revert optimistic update if needed, though handling valid rollback is complex with just optimistic UI
+            // For now, simpler to just notify error.
+        }
+    } catch (error) {
+        toast.error("Network error, failed to save")
+    }
   }
 
   return (

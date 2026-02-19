@@ -4,17 +4,41 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 
-export async function getDayLogs() {
+type DayLog = {
+  day: number
+  activities: Record<string, boolean>
+  userId?: string
+  id?: string
+  updatedAt?: Date
+}
+
+export async function getDayLogs(): Promise<DayLog[]> {
   const session = await auth()
-  if (!session?.user?.id) return []
+  const userId = session?.user?.id
+
+  if (!userId) return []
 
   try {
-      const logs = await prisma.dayLog.findMany({
-        where: { userId: session.user.id },
+      const logs = await prisma.activityLog.findMany({
+        where: { userId },
       })
-      return logs.map(log => ({
-        ...log,
-        activities: (log.activities as Record<string, boolean>) || {}
+      
+      // Transform relational data to Map<Day, Activities>
+      const dayMap = new Map<number, Record<string, boolean>>()
+      
+      logs.forEach((log) => {
+          const currentDayActivities = dayMap.get(log.day) || {}
+          currentDayActivities[log.activity] = log.isCompleted
+          dayMap.set(log.day, currentDayActivities)
+      })
+
+      // Convert Map to array of objects expected by frontend
+      return Array.from(dayMap.entries()).map(([day, activities]) => ({
+          day,
+          activities,
+          userId,
+          id: `day-${day}`, // Dummy ID for frontend compatibility
+          updatedAt: new Date()
       }))
   } catch (error) {
     console.error("Failed to fetch logs:", error)
@@ -24,50 +48,34 @@ export async function getDayLogs() {
 
 export async function toggleActivity(day: number, activity: string, status: boolean) {
   const session = await auth()
-  if (!session?.user?.id) throw new Error("Unauthorized")
+  const userId = session?.user?.id
+  
+  if (!userId) throw new Error("Unauthorized")
 
   try {
-      // Find existing log for this day
-      const existingLog = await prisma.dayLog.findUnique({
-        where: {
-          userId_day: {
-            userId: session.user.id,
-            day: day,
+      await prisma.activityLog.upsert({
+          where: {
+              userId_day_activity: {
+                  userId,
+                  day,
+                  activity
+              }
           },
-        },
+          update: {
+              isCompleted: status
+          },
+          create: {
+              userId,
+              day,
+              activity,
+              isCompleted: status
+          }
       })
-
-      if (existingLog) {
-        // Update existing log
-        const currentActivities = (existingLog.activities as Record<string, boolean>) || {}
-        const newActivities = { ...currentActivities, [activity]: status }
-
-        await prisma.dayLog.update({
-          where: { id: existingLog.id },
-          data: { activities: newActivities },
-        })
-      } else {
-        // Create new log
-        await prisma.dayLog.create({
-          data: {
-            userId: session.user.id,
-            day: day,
-            activities: { [activity]: status },
-          },
-        })
-      }
       
       revalidatePath("/")
       return { success: true }
   } catch (error) {
       console.error("Error toggling activity:", error)
-      // For demo purposes/optimistic UI, if DB is down, we might want to just silently fail (or return success so UI stays checked)
-      // But correct behavior is to report failure. 
-      // However, if we want "demo" mode to feel working, we return success: true even if DB failed?
-      // No, that's misleading. Let's return false. User will see the checkmark revert if they refresh, but immediate revert is annoying.
-      // Let's return success: false.
-      // In Offline Demo mode, we return success: true so the UI state persists for the session.
-      // This allows the user to interact with the chart even without a DB.
-      return { success: true }
+      return { success: false }
   }
 }

@@ -13,37 +13,35 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
     Credentials({
       name: "Guest Access",
-      credentials: {},
-      async authorize() {
-        // Create or return a dummy guest user
-        // For simplicity in this demo, we might want to just return a fixed dummy user 
-        // OR create a new one each time.
-        // Let's creating a new guest user if one doesn't exist for the session?
-        // Actually, for a "demo", we can just use a specific hardcoded ID or email.
+      credentials: {
+        username: { label: "Username", type: "text" },
+      },
+      async authorize(credentials) {
+        const username = credentials?.username as string
         
-        const guestEmail = `guest-${Date.now()}@example.com`
-        
-        // We can create a user directly in DB
+        if (!username) return null
+
+        // 1. Try to find existing user
         try {
-            const user = await prisma.user.create({
+            const existingUser = await prisma.user.findUnique({
+                where: { username }
+            })
+
+            if (existingUser) return existingUser
+
+            // 2. If not found, create new user
+            const newUser = await prisma.user.create({
                 data: {
-                    email: guestEmail,
-                    name: "Guest User",
+                    username,
+                    name: username,
                     isGuest: true,
+                    email: `guest-${username}@example.com`, // Dummy email
                 }
             })
-            return user;
-        } catch (e) {
-            console.error("Failed to create guest user (likely no DB connection)", e)
-            // Fallback for demo without DB
-            return {
-                id: "guest-offline",
-                name: "Guest (Demo)",
-                email: "guest@demo.local",
-                isGuest: true,
-                emailVerified: null,
-                image: null,
-            }
+            return newUser
+        } catch (error) {
+            console.error("Error in guest auth:", error)
+            return null
         }
       },
     }),
