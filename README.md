@@ -16,6 +16,25 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+## Auth setup (Google)
+
+Set these environment variables (locally in `.env`, and in Vercel Project Settings → Environment Variables):
+
+- `AUTH_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+- `DATABASE_URL`
+
+If you see `AccessDenied` during Google sign-in, it’s usually a Google OAuth Consent Screen restriction:
+
+- OAuth consent screen is in **Testing** and your account is not added under **Test users**
+- App is **Internal** (Workspace-only) but you’re signing in with an external Google account
+
+Also ensure your Google OAuth client has these Authorized redirect URIs:
+
+- `http://localhost:3000/api/auth/callback/google`
+- `https://<your-domain>/api/auth/callback/google`
+
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
