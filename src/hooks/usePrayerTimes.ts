@@ -36,12 +36,21 @@ type NextPrayer = {
     isSehri: boolean;
 }
 
+type PrayerTiming = {
+    name: string;
+    time: string;        // formatted 12h
+    timeLeft: string;    // "2h 15m 30s" remaining, or "Passed"
+    status: "current" | "upcoming" | "next" | "passed";
+}
+
 export function usePrayerTimes() {
   const [prayerData, setPrayerData] = useState<PrayerData | null>(null);
   const [location, setLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [locationDenied, setLocationDenied] = useState<boolean>(false);
   const [nextPrayer, setNextPrayer] = useState<NextPrayer | null>(null);
+  const [prayerTimings, setPrayerTimings] = useState<PrayerTiming[]>([]);
   const [city, setCity] = useState<string>("Locating...");
 
   // 1. Get Geolocation
@@ -60,7 +69,8 @@ export function usePrayerTimes() {
         });
       },
       (err) => {
-        setError("Unable to retrieve your location. Please enable location access.");
+        setLocationDenied(true);
+        setError("Location access denied.");
         setLoading(false);
       }
     );
@@ -169,8 +179,6 @@ export function usePrayerTimes() {
           const timeLeft = `${hours}h ${minutes}m ${seconds}s`;
 
           // Determine Iftar/Sehri status
-          // Iftar = Maghrib
-          // Sehri = Fajr (End of Sehri)
           const isIftar = upcoming.name === 'Maghrib';
           const isSehri = upcoming.name === 'Fajr';
 
@@ -181,6 +189,69 @@ export function usePrayerTimes() {
               isIftar,
               isSehri
           });
+
+          // ── Build per-prayer timing data ─────────────────────────────────
+          const mainPrayers = [
+              { name: 'Fajr',    time: timings.Fajr },
+              { name: 'Dhuhr',   time: timings.Dhuhr },
+              { name: 'Asr',     time: timings.Asr },
+              { name: 'Maghrib', time: timings.Maghrib },
+              { name: 'Isha',    time: timings.Isha },
+          ];
+
+          const timingData: PrayerTiming[] = mainPrayers.map((p, i) => {
+              const pDate = new Date();
+              const [h, m] = p.time.split(':');
+              pDate.setHours(parseInt(h), parseInt(m), 0, 0);
+              const diff = pDate.getTime() - now.getTime();
+
+              // Next prayer in our list (wraps to first if current is last)
+              const nextPrayerEntry = mainPrayers[i + 1] || mainPrayers[0];
+              const nextDate = new Date();
+              const [nh, nm] = nextPrayerEntry.time.split(':');
+              nextDate.setHours(parseInt(nh), parseInt(nm), 0, 0);
+              if (nextDate <= pDate) nextDate.setDate(nextDate.getDate() + 1); // next day wrap
+
+              let status: PrayerTiming['status'];
+              let tLeft: string;
+
+              if (p.name === upcoming.name) {
+                  // This is the next upcoming prayer
+                  status = 'next';
+                  const hr = Math.floor(diff / (1000 * 60 * 60));
+                  const mn = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                  const sc = Math.floor((diff % (1000 * 60)) / 1000);
+                  tLeft = `${hr}h ${mn}m ${sc}s`;
+              } else if (diff < 0) {
+                  // Prayer has started — check if we're still within its window
+                  const diffToNext = nextDate.getTime() - now.getTime();
+                  if (diffToNext > 0) {
+                      // Currently active prayer
+                      status = 'current';
+                      const hr = Math.floor(diffToNext / (1000 * 60 * 60));
+                      const mn = Math.floor((diffToNext % (1000 * 60 * 60)) / (1000 * 60));
+                      const sc = Math.floor((diffToNext % (1000 * 60)) / 1000);
+                      tLeft = `${hr}h ${mn}m ${sc}s`;
+                  } else {
+                      status = 'passed';
+                      tLeft = 'Passed';
+                  }
+              } else {
+                  status = 'upcoming';
+                  const hr = Math.floor(diff / (1000 * 60 * 60));
+                  const mn = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                  tLeft = `in ${hr}h ${mn}m`;
+              }
+
+              return {
+                  name: p.name,
+                  time: formatTime12Hour(p.time),
+                  timeLeft: tLeft,
+                  status,
+              };
+          });
+
+          setPrayerTimings(timingData);
       }
   };
 
@@ -191,5 +262,5 @@ export function usePrayerTimes() {
       return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
   }
 
-  return { prayerData, location, error, loading, nextPrayer, city };
+  return { prayerData, location, error, loading, locationDenied, nextPrayer, prayerTimings, city };
 }
