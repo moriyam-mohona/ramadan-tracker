@@ -21,6 +21,7 @@ model User {
   activityLogs  ActivityLog[]
   
   isGuest       Boolean   @default(false)
+  guestPasscode String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }

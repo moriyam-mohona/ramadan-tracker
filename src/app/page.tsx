@@ -4,6 +4,7 @@ import { RamadanChart } from "@/components/RamadanChart"
 import { PrayerTimes } from "@/components/PrayerTimes"
 import { NavbarCountdown } from "@/components/NavbarCountdown"
 import { InstallPrompt } from "@/components/InstallPrompt"
+import { GuestLoginForm } from "@/components/GuestLoginForm"
 
 export default async function Home() {
   const session = await auth()
@@ -43,37 +44,16 @@ export default async function Home() {
                 </form>
               </div>
             ) : (
-                <div className="flex gap-2">
-                     <form
-                      action={async () => {
-                        "use server"
-                        await signIn("google")
-                      }}
-                    >
-                      <button type="submit" className="text-sm font-medium px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors shadow-sm">
-                        Sign In
-                      </button>
-                    </form>
-
-                    <form
-                        action={async (formData) => {
-                            "use server"
-                            await signIn("credentials", formData)
-                        }}
-                        className="flex gap-2"
-                    >
-                        <input 
-                            type="text" 
-                            name="username" 
-                            placeholder="Username" 
-                            required
-                            className="hidden md:block px-3 py-2 border border-emerald-200 rounded-md text-sm w-32 focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/50"
-                        />
-                        <button type="submit" className="text-sm font-medium px-4 py-2 border border-emerald-200 text-emerald-700 rounded-md hover:bg-emerald-50 transition-colors">
-                            Guest
-                        </button>
-                    </form>
-                </div>
+                <form
+                  action={async () => {
+                    "use server"
+                    await signIn("google")
+                  }}
+                >
+                  <button type="submit" className="text-sm font-medium px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors shadow-sm">
+                    Sign In with Google
+                  </button>
+                </form>
             )}
           </div>
         </div>
@@ -142,24 +122,7 @@ export default async function Home() {
                     </div>
                 </div>
 
-                <form
-                    action={async (formData) => {
-                        "use server"
-                        await signIn("credentials", formData)
-                    }}
-                    className="flex flex-col gap-3"
-                >
-                    <input 
-                        type="text" 
-                        name="username" 
-                        placeholder="Choose a username..." 
-                        required
-                        className="w-full px-4 py-3 border border-emerald-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-emerald-50/30 text-emerald-900 placeholder:text-emerald-400"
-                    />
-                    <button type="submit" className="w-full px-4 py-3 border-2 border-emerald-100 text-emerald-700 font-bold rounded-lg hover:bg-emerald-50 hover:border-emerald-200 transition-all">
-                        Begin as Guest
-                    </button>
-                </form>
+                <GuestLoginForm />
              </div>
           </div>
         )}
