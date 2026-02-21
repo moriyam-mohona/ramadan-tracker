@@ -1,7 +1,7 @@
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   secret: process.env.AUTH_SECRET,
@@ -75,7 +75,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         } catch (error) {
           console.error("Error saving Google user:", error)
-          return false
+          return true // Allow login even if DB save fails
         }
       }
       return true
