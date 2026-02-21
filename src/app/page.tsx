@@ -5,7 +5,7 @@ import { PrayerTimes } from "@/components/PrayerTimes"
 import { NavbarCountdown } from "@/components/NavbarCountdown"
 import { InstallPrompt } from "@/components/InstallPrompt"
 import { GuestLoginForm } from "@/components/GuestLoginForm"
-import { GoogleSignInButton } from "@/components/GoogleSignInButton"
+// import { GoogleSignInButton } from "@/components/GoogleSignInButton"
 
 export default async function Home() {
   const session = await auth()
@@ -33,7 +33,7 @@ export default async function Home() {
           </div>
 
           {/* Center countdow — grows to fill space, hidden on mobile */}
-          <div className="hidden md:flex flex-1 justify-center">
+          <div className="flex flex-1 justify-center ">
             <NavbarCountdown />
           </div>
 
@@ -65,7 +65,11 @@ export default async function Home() {
                 </form>
               </>
             ) : (
-              <GoogleSignInButton size="sm" />
+              <>
+                                  <div className="w-60 h-10 rounded-full hidden md:flex"/>   
+
+              {/* <GoogleSignInButton size="sm" /> */}
+              </>
             )}
           </div>
         </div>
@@ -88,15 +92,15 @@ export default async function Home() {
                 <RamadanChart initialLogs={logs} />
            </div>
         ) : (
-          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-12">
+          <div className="flex flex-col items-center justify-center min-h-[70vh] text-center space-y-6 md:space-y-12 py-8 md:py-0">
             
             {/* Hero Headers */}
-            <div className="space-y-4 max-w-2xl mx-auto">
-                <p className="text-3xl font-arabic text-emerald-800 opacity-90">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
-                <h2 className="text-5xl md:text-6xl font-bold tracking-tight text-emerald-900">
+            <div className="space-y-3 max-w-2xl mx-auto px-2">
+                <p className="text-xl sm:text-3xl font-arabic text-emerald-800 opacity-90">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</p>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-emerald-900">
                   Ramadan <span className="text-amber-500">Journey</span>
                 </h2>
-                <p className="text-xl text-emerald-700/80 leading-relaxed">
+                <p className="text-base sm:text-xl text-emerald-700/80 leading-relaxed">
                   A spiritual companion to track your prayers, Quran recitation, and daily good deeds.
                 </p>
             </div>
@@ -106,22 +110,19 @@ export default async function Home() {
                  <PrayerTimes />
             </div>
             
-             <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl shadow-emerald-100/50 border border-emerald-50 relative overflow-hidden">
+             <div className="w-full max-w-md bg-white p-5 sm:p-8 rounded-2xl shadow-xl shadow-emerald-100/50 border border-emerald-50 relative overflow-hidden">
                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-amber-400"></div>
                  <h3 className="text-lg font-bold text-emerald-900 mb-6 flex items-center justify-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     Start Your Journey
                  </h3>
-                 <div className="w-full mb-6">
-                     <GoogleSignInButton />
-                 </div>
 
                 <div className="relative mb-6">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t border-emerald-100" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-white px-2 text-emerald-500 font-medium tracking-wider">Or continue as guest</span>
+                        <span className="bg-white px-2 text-emerald-500 font-medium tracking-wider">Continue as guest</span>
                     </div>
                 </div>
 

@@ -66,7 +66,7 @@ export function NavbarCountdown() {
     if (!countdown) return null
 
     return (
-        <div className="hidden md:flex items-center gap-2 bg-emerald-50/50 px-4 py-1.5 rounded-full border border-emerald-200/60 shadow-sm backdrop-blur-sm">
+        <div className="w-[200px] flex items-center justify-center gap-2 bg-emerald-50/50 px-4 py-1.5 rounded-full border border-emerald-200/60 shadow-sm backdrop-blur-sm">
             <span className="text-xs font-bold text-emerald-700 uppercase tracking-widest">
                 {countdown.label} in
             </span>
