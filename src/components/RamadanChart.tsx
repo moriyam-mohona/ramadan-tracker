@@ -134,7 +134,7 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
         <div className="inline-block min-w-full align-middle">
           <table className="min-w-full divide-y divide-emerald-100/50 border-separate border-spacing-0">
             <thead className="bg-emerald-900 text-emerald-50">
-              {/* Day Headers.. */}
+              {/* Day Headers */}
               <tr>
                 <th
                   scope="col"
