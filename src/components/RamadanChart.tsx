@@ -53,7 +53,7 @@ export function RamadanChart({ initialLogs }: { initialLogs: DayLog[] }) {
   const [currentDay, setCurrentDay] = useState<number | null>(null)
   const { isOnline, saveActionOffline } = useOfflineSync()
 
-  // Determine current day of Ramadan (Approximate logic for 2026/1447..)
+  // Determine current day of Ramadan (Approximate logic for 2026/1447)
   // Assuming Ramadan 2026 starts approx Feb 18. 
   // Adjust this logic as per actual moon sighting or generic "Day X"
   useEffect(() => {
