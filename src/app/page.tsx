@@ -5,6 +5,7 @@ import { PrayerTimes } from "@/components/PrayerTimes"
 import { NavbarCountdown } from "@/components/NavbarCountdown"
 import { InstallPrompt } from "@/components/InstallPrompt"
 import { GuestLoginForm } from "@/components/GuestLoginForm"
+import { GoogleSignInButton } from "@/components/GoogleSignInButton"
 
 export default async function Home() {
   const session = await auth()
@@ -44,16 +45,7 @@ export default async function Home() {
                 </form>
               </div>
             ) : (
-                <form
-                  action={async () => {
-                    "use server"
-                    await signIn("google")
-                  }}
-                >
-                  <button type="submit" className="text-sm font-medium px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors shadow-sm">
-                    Sign In with Google
-                  </button>
-                </form>
+                <GoogleSignInButton size="sm" />
             )}
           </div>
         </div>
@@ -100,18 +92,9 @@ export default async function Home() {
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
                     Start Your Journey
                  </h3>
-                 <form
-                    action={async () => {
-                        "use server"
-                        await signIn("google")
-                    }}
-                    className="w-full mb-6"
-                >
-                    <button type="submit" className="w-full px-8 py-3 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition-all shadow-lg hover:shadow-emerald-200/50 flex items-center justify-center gap-2">
-                        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .587 5.387.587 12s5.28 12 11.893 12c3.48 0 6.147-1.133 8.213-3.293 2.08-2.16 2.72-5.467 2.72-8.227 0-.8-.08-1.56-.24-2.253h-10.693z"/></svg>
-                        Sign In with Google
-                    </button>
-                </form>
+                 <div className="w-full mb-6">
+                     <GoogleSignInButton />
+                 </div>
 
                 <div className="relative mb-6">
                     <div className="absolute inset-0 flex items-center">
