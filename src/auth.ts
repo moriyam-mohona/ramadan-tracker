@@ -46,13 +46,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.sub = user.id
+        // On first sign-in, look up the real MongoDB _id by email.
+        // This is critical for Google OAuth where user.id is Google's sub, not our DB id.
+        const dbUser = await prisma.user.findUnique({ where: { email: user.email! } })
+        token.id = dbUser?.id ?? user.id
       }
       return token
     },
     async session({ session, token }) {
-      if (session.user && token?.sub) {
-        session.user.id = token.sub
+      if (session.user && token?.id) {
+        session.user.id = token.id as string
       }
       return session
     },
