@@ -1,11 +1,9 @@
-import { prisma } from "@/lib/prisma"
-import { PrismaAdapter } from "@auth/prisma-adapter"
 import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
+import Credentials from "next-auth/providers/credentials"
+import { prisma } from "@/lib/prisma"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
   providers: [
     Google({
@@ -19,10 +17,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
       async authorize(credentials) {
         const username = credentials?.username as string
-
         if (!username) return null
 
-        // 1. Try to find existing user
         try {
           const existingUser = await prisma.user.findUnique({
             where: { username },
@@ -37,7 +33,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             }
           }
 
-          // 2. If not found, create new user
           const newUser = await prisma.user.create({
             data: {
               username,
@@ -61,9 +56,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
+    async signIn({ user, account }) {
+      // Handle Google OAuth — save user to DB if first time
+      if (account?.provider === "google") {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+          })
+
+          if (!existingUser) {
+            await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name,
+                image: user.image,
+              },
+            })
+          }
+        } catch (error) {
+          console.error("Error saving Google user:", error)
+          return false
+        }
+      }
+      return true
+    },
     async jwt({ token, user, account }) {
-      // For Credentials provider, user.id is the DB id
-      if (user) {
+      if (account?.provider === "google" && token.email) {
+        // Fetch the DB user to get the real ID
+        try {
+          const dbUser = await prisma.user.findUnique({
+            where: { email: token.email },
+          })
+          if (dbUser) token.sub = dbUser.id
+        } catch (error) {
+          console.error("Error fetching user in jwt callback:", error)
+        }
+      } else if (user) {
         token.sub = user.id
       }
       return token
