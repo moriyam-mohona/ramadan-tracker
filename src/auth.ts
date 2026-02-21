@@ -75,7 +75,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         } catch (error) {
           console.error("Error saving Google user:", error)
-          return true // Allow login even if DB save fails
+          return false // user will not be able to login if this fails
         }
       }
       return true
