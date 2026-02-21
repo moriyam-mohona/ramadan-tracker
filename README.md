@@ -1,55 +1,160 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ☪ Ramadan Planner
+
+> A spiritual companion to track your prayers, Quran recitation, and daily good deeds — built for Ramadan 1447 / 2026.
+
+![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=flat-square&logo=mongodb)
+![PWA](https://img.shields.io/badge/PWA-installable-purple?style=flat-square)
+
+---
+
+## What is this?
+
+**Ramadan Planner** is a full-stack Progressive Web App that helps Muslims track their daily acts of worship across all 30 days of Ramadan. It combines a real-time prayer times panel with a 30-day activity tracker — all in one clean, mobile-first interface.
+
+Built entirely in Bengali (বাংলা) for the target audience, with English UI chrome.
+
+---
+
+## Features
+
+### 🕌 Live Prayer Times
+- Auto-detects location via browser Geolocation API
+- Fetches prayer times from [Aladhan API](https://aladhan.com/prayer-times-api)
+- Shows current prayer countdown, next prayer, and status per prayer (current / next / upcoming / passed)
+- Navbar shows live Iftar / Sehri countdown
+- Skeleton loaders while fetching; disappears silently if location is denied
+
+### 📊 30-Day Activity Tracker
+- **23 daily goals** across 8 categories: Fard Salah, Nafl Salah, Quran Recitation, Seerah Study, Dua & Dhikr, Character, Charity, Self-Discipline
+- **Desktop:** scrollable 30-column × 23-row grid with sticky headers and per-day progress bars
+- **Mobile:** tap-to-open day grid (5 × 6 tiles) with a bottom sheet checklist — no horizontal scrolling
+- Optimistic UI updates via React's `useOptimistic` — zero perceived latency
+- Offline support: changes are queued in `localStorage` and synced when reconnected
+
+### 🔐 Authentication
+- **Google Sign-In** via NextAuth.js v5 (OAuth 2.0)
+- **Guest access** with username + self-chosen 4–6 digit PIN — works across devices
+- JWT session strategy; no session DB required
+
+### 📱 PWA
+- Installable on Android and iOS
+- Install prompt banner with custom UI
+- Works offline (activity changes queued, prayer times cached)
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | Next.js 15 (App Router, Server Actions) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Auth | NextAuth.js v5 (Google + Credentials) |
+| Database | MongoDB Atlas via Prisma ORM |
+| Prayer Data | Aladhan REST API |
+| Notifications | Sonner (toast) |
+| Icons | Lucide React |
+| PWA | next-pwa |
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx              # Home page (SSR, auth-gated)
+│   ├── layout.tsx            # Root layout + Toaster
+│   ├── api/
+│   │   ├── guest/route.ts    # Guest account creation API
+│   │   └── auth/             # NextAuth route handlers
+│   └── auth/                 # Sign-in page redirect
+├── components/
+│   ├── RamadanChart.tsx      # 30-day tracker (table + mobile grid + sheet)
+│   ├── PrayerTimes.tsx       # Prayer times card + countdown
+│   ├── NavbarCountdown.tsx   # Iftar/Sehri live timer in navbar
+│   ├── GuestLoginForm.tsx    # Multi-step PIN login form
+│   ├── GoogleSignInButton.tsx
+│   └── InstallPrompt.tsx     # PWA install banner
+├── hooks/
+│   ├── usePrayerTimes.ts     # Geolocation + Aladhan fetch + status calc
+│   └── useOfflineSync.ts     # Offline queue + auto-sync on reconnect
+├── actions.ts                # Server Actions: getDayLogs, toggleActivity
+├── auth.ts                   # NextAuth config
+└── lib/
+    ├── prisma.ts
+    └── utils.ts
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone & install
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/ramadan-diary.git
+cd ramadan-diary
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment variables
 
-## Auth setup (Google)
+Copy `.env.example` to `.env` and fill in:
 
-Set these environment variables (locally in `.env`, and in Vercel Project Settings → Environment Variables):
+```env
+AUTH_SECRET=         # generate with: openssl rand -base64 32
+DATABASE_URL=        # MongoDB Atlas connection string
+AUTH_URL=            # http://localhost:3000 (dev) or your production URL
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+```
 
-- `AUTH_SECRET`
-- `GOOGLE_CLIENT_ID`
-- `GOOGLE_CLIENT_SECRET`
-- `DATABASE_URL`
+### 3. Push DB schema & run
 
-If you see `AccessDenied` during Google sign-in, it’s usually a Google OAuth Consent Screen restriction:
+```bash
+npx prisma generate
+npx prisma db push
+npm run dev
+```
 
-- OAuth consent screen is in **Testing** and your account is not added under **Test users**
-- App is **Internal** (Workspace-only) but you’re signing in with an external Google account
+Open [http://localhost:3000](http://localhost:3000).
 
-Also ensure your Google OAuth client has these Authorized redirect URIs:
+---
 
-- `http://localhost:3000/api/auth/callback/google`
-- `https://<your-domain>/api/auth/callback/google`
+## Google OAuth Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Go to [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials
+2. Create an OAuth 2.0 Client ID (Web application)
+3. Add Authorized redirect URIs:
+   - `http://localhost:3000/api/auth/callback/google`
+   - `https://<your-domain>/api/auth/callback/google`
+4. Add test users under OAuth Consent Screen → Test users (if using Testing mode)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## Deployment (Vercel)
 
-To learn more about Next.js, take a look at the following resources:
+1. Push to GitHub
+2. Import to [Vercel](https://vercel.com)
+3. Add all env vars under Project Settings → Environment Variables
+4. Deploy
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Known Improvements (see `IMPROVEMENTS.md`)
 
-## Deploy on Vercel
+- [ ] Hash guest PINs with `bcrypt` (currently plain text)
+- [ ] Rate-limit `/api/guest` to prevent PIN brute-force
+- [ ] Remove `revalidatePath` from `toggleActivity` (not needed with optimistic UI)
+- [ ] Move prayer data into React Context (currently fetched twice)
+- [ ] Streak / summary stats card
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+MIT — free to use, fork, and build upon. Barakallahu Feek 🌙
