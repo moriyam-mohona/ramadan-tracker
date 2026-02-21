@@ -1,9 +1,11 @@
-import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
-import Credentials from "next-auth/providers/credentials"
 import { prisma } from "@/lib/prisma"
+import { PrismaAdapter } from "@auth/prisma-adapter"
+import NextAuth from "next-auth"
+import Credentials from "next-auth/providers/credentials"
+import Google from "next-auth/providers/google"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma),
   secret: process.env.AUTH_SECRET,
   providers: [
     Google({
@@ -59,7 +61,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      // For Credentials provider, user.id is the DB id
       if (user) {
         token.sub = user.id
       }
