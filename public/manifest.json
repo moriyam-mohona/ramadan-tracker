@@ -1,6 +1,6 @@
 {
-  "name": "Ramadan Planner",
-  "short_name": "RamadanDiary",
+  "name": "Ramadan Tracker",
+  "short_name": "RamadanTracker",
   "description": "A spiritual companion for the holy month including prayer times, tracking, and daily reflections.",
   "start_url": "/",
   "display": "standalone",

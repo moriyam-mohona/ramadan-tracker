@@ -27,7 +27,7 @@ export default async function Home() {
           <div className="flex items-center gap-2 shrink-0">
             <h1 className="font-bold text-emerald-800 flex items-center gap-1.5">
               <span className="text-2xl text-amber-500">☪</span>
-              <span className="hidden sm:inline text-xl">Ramadan Planner</span>
+              <span className="hidden sm:inline text-xl">Ramadan Tracker</span>
             </h1>
             <InstallPrompt />
           </div>

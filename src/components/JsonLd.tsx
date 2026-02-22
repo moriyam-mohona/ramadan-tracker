@@ -2,7 +2,7 @@ export function JsonLd() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "Ramadan Planner",
+    "name": "Ramadan Tracker",
     "url": "https://ramadan-diary.vercel.app", // Adjust if domain changes
     "description": "A spiritual companion for tracking daily prayers, Quran recitation, and good deeds during Ramadan.",
     "applicationCategory": "LifestyleApplication",

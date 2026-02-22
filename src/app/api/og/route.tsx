@@ -62,7 +62,7 @@ export async function GET(request: Request) {
               padding: 0,
             }}
           >
-            Ramadan Planner
+            Ramadan Tracker
           </div>
 
           <div

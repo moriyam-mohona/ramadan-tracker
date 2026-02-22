@@ -5,8 +5,10 @@ type PrayerTimes = {
   Sunrise: string;
   Dhuhr: string;
   Asr: string;
+  Sunset: string;
   Maghrib: string;
   Isha: string;
+  Midnight: string;
   [key: string]: string;
 };
 
@@ -199,18 +201,34 @@ export function usePrayerTimes() {
               { name: 'Isha',    time: timings.Isha },
           ];
 
-          const timingData: PrayerTiming[] = mainPrayers.map((p, i) => {
+          // Each prayer's valid window ends at its correct Islamic time (Fiqh ruling):
+          //   Fajr    → Sunrise       (unanimous agreement)
+          //   Dhuhr   → Asr time      (ends exactly when Asr begins)
+          //   Asr     → Sunset        (absolute valid window until sun sets)
+          //   Maghrib → Isha time     (ends when red twilight disappears = Isha start)
+          //   Isha    → Midnight      (Hanafi/Shafi'i/Hanbali: makruh after midnight)
+          const prayerEndTimes: Record<string, string> = {
+              Fajr:    timings.Sunrise,
+              Dhuhr:   timings.Asr,
+              Asr:     timings.Sunset || timings.Maghrib, // Sunset === Maghrib on aladhan API
+              Maghrib: timings.Isha,
+              Isha:    timings.Midnight,  // ends at midnight, not Fajr
+          };
+
+          const timingData: PrayerTiming[] = mainPrayers.map((p) => {
               const pDate = new Date();
               const [h, m] = p.time.split(':');
               pDate.setHours(parseInt(h), parseInt(m), 0, 0);
               const diff = pDate.getTime() - now.getTime();
 
-              // Next prayer in our list (wraps to first if current is last)
-              const nextPrayerEntry = mainPrayers[i + 1] || mainPrayers[0];
-              const nextDate = new Date();
-              const [nh, nm] = nextPrayerEntry.time.split(':');
-              nextDate.setHours(parseInt(nh), parseInt(nm), 0, 0);
-              if (nextDate <= pDate) nextDate.setDate(nextDate.getDate() + 1); // next day wrap
+              // Use the correct end time for this prayer's window
+              const endTimeStr = prayerEndTimes[p.name];
+              const endDate = new Date();
+              const [eh, em] = endTimeStr.split(':');
+              endDate.setHours(parseInt(eh), parseInt(em), 0, 0);
+              // If the end time is before (or equal to) the start, it's next day
+              // This covers Isha (ends at Fajr next day) and midnight edge-cases
+              if (endDate <= pDate) endDate.setDate(endDate.getDate() + 1);
 
               let status: PrayerTiming['status'];
               let tLeft: string;
@@ -223,14 +241,13 @@ export function usePrayerTimes() {
                   const sc = Math.floor((diff % (1000 * 60)) / 1000);
                   tLeft = `${hr}h ${mn}m ${sc}s`;
               } else if (diff < 0) {
-                  // Prayer has started — check if we're still within its window
-                  const diffToNext = nextDate.getTime() - now.getTime();
-                  if (diffToNext > 0) {
-                      // Currently active prayer
+                  // Prayer has started — check if still within its valid window
+                  const diffToEnd = endDate.getTime() - now.getTime();
+                  if (diffToEnd > 0) {
                       status = 'current';
-                      const hr = Math.floor(diffToNext / (1000 * 60 * 60));
-                      const mn = Math.floor((diffToNext % (1000 * 60 * 60)) / (1000 * 60));
-                      const sc = Math.floor((diffToNext % (1000 * 60)) / 1000);
+                      const hr = Math.floor(diffToEnd / (1000 * 60 * 60));
+                      const mn = Math.floor((diffToEnd % (1000 * 60 * 60)) / (1000 * 60));
+                      const sc = Math.floor((diffToEnd % (1000 * 60)) / 1000);
                       tLeft = `${hr}h ${mn}m ${sc}s`;
                   } else {
                       status = 'passed';

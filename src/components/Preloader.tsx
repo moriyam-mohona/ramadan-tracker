@@ -48,7 +48,7 @@ export function Preloader() {
 
       {/* App name */}
       <h1 className="text-2xl font-bold tracking-wide text-emerald-50 mb-1">
-        Ramadan Planner
+        Ramadan Tracker
       </h1>
       <p className="text-emerald-400/80 text-sm font-arabic tracking-widest mb-8">
         رمضان مبارك

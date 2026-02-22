@@ -13,7 +13,7 @@ const hindSiliguri = Hind_Siliguri({
 });
 
 export const metadata: Metadata = {
-  title: "Ramadan Planner | Track Your Journey",
+  title: "Ramadan Tracker | Track Your Journey",
   description: "A spiritual companion to track your daily prayers, Quran recitation, and good deeds during the blessed month of Ramadan.",
   metadataBase: new URL("https://ramadan-diary.vercel.app"),
   manifest: "/manifest.json",
