@@ -87,7 +87,7 @@ export async function GET(request: Request) {
               opacity: 0.8,
             }}
           >
-            ramadan-diary.vercel.app
+            ramadan-tracking.vercel.app
           </div>
         </div>
       ),

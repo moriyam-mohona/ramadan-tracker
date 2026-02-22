@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/private/', // Example of disallowed route
     },
-    sitemap: 'https://ramadan-diary.vercel.app/sitemap.xml',
+    sitemap: 'https://ramadan-tracking.vercel.app/sitemap.xml',
   }
 }

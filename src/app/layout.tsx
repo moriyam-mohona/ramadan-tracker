@@ -15,7 +15,7 @@ const hindSiliguri = Hind_Siliguri({
 export const metadata: Metadata = {
   title: "Ramadan Tracker | Track Your Journey",
   description: "A spiritual companion to track your daily prayers, Quran recitation, and good deeds during the blessed month of Ramadan.",
-  metadataBase: new URL("https://ramadan-diary.vercel.app"),
+  metadataBase: new URL("https://ramadan-tracking.vercel.app"),
   manifest: "/manifest.json",
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌙</text></svg>"
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ramadan Tracker | Track Your Journey",
     description: "A spiritual companion to track your daily prayers, Quran recitation, and good deeds during the blessed month of Ramadan.",
-    url: "https://ramadan-diary.vercel.app",
+    url: "https://ramadan-tracking.vercel.app",
     siteName: "Ramadan Tracker",
     images: [
       {

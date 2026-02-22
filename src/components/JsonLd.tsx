@@ -3,7 +3,7 @@ export function JsonLd() {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": "Ramadan Tracker",
-    "url": "https://ramadan-diary.vercel.app", // Adjust if domain changes
+    "url": "https://ramadan-tracking.vercel.app", // Adjust if domain changes
     "description": "A spiritual companion for tracking daily prayers, Quran recitation, and good deeds during Ramadan.",
     "applicationCategory": "LifestyleApplication",
     "operatingSystem": "All",
@@ -13,7 +13,7 @@ export function JsonLd() {
       "priceCurrency": "USD"
     },
     "featureList": "Prayer Times, Iftar Countdown, Sehri Countdown, Daily Habit Tracker, Quran Log",
-    "screenshot": "https://ramadan-diary.vercel.app/api/og", 
+    "screenshot": "https://ramadan-tracking.vercel.app/api/og", 
     "author": {
         "@type": "Person",
         "name": "Mohona" 
