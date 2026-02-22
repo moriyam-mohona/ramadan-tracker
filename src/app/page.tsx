@@ -55,7 +55,7 @@ export default async function Home() {
                     {displayName}
                   </span>
                 )}
-                <form action={async () => { "use server"; await signOut() }}>
+                <form action={async () => { "use server"; await signOut({ redirectTo: "/" }) }}>
                   <button
                     type="submit"
                     className="text-sm font-medium text-emerald-700 hover:text-emerald-900 hover:underline transition-colors whitespace-nowrap"
